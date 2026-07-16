@@ -443,12 +443,14 @@
 
     movePlayer(dir) {
       if (!this.running) return;
-      const target = this.playerIndex + dir;
+      let target = this.playerIndex + dir;
+      while (target >= 0 && target < this.slotCount) {
+        const candidate = this.slots[target];
+        if (!candidate.occupant && !candidate.blocked) break;
+        target += dir;
+      }
       if (target < 0 || target >= this.slotCount) return;
-      const slot = this.slots[target];
-      if (slot.occupant || slot.blocked) return;
 
-      const fromEl = this.slotEl(this.playerIndex);
       const first = this.playerAvatar.getBoundingClientRect();
 
       this.slots[this.playerIndex].occupant = null;
