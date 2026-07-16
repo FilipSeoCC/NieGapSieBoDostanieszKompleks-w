@@ -94,9 +94,18 @@ html, body {
 
 .slot {
   position: relative;
-  width: 12vw; max-width: 110px; min-width: 62px;
+  width: 12vw; max-width: 110px; min-width: 46px;
   height: 100%;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+}
+
+.slot-new .urinal {
+  animation: slotPopIn 420ms cubic-bezier(.2,.8,.3,1.4);
+}
+@keyframes slotPopIn {
+  0% { transform: scale(0.2) translateY(20px); opacity: 0; filter: brightness(2) drop-shadow(0 0 14px rgba(57,255,136,0.9)); }
+  60% { transform: scale(1.08) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .urinal {

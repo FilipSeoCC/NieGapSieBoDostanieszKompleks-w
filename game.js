@@ -90,12 +90,8 @@
   const getBest = () => Number(localStorage.getItem(BEST_KEY) || 0);
   const setBest = (v) => localStorage.setItem(BEST_KEY, String(v));
 
-  function spawnIntervalFor(elapsed) {
-    if (elapsed < 15) return 3000;
-    if (elapsed < 35) return 2000;
-    if (elapsed < 60) return 1500;
-    const t = Math.min(elapsed, 120);
-    return Math.max(600, 1500 - ((t - 60) / 60) * 900);
+  function spawnIntervalFor(level) {
+    return Math.max(600, 3000 - (level - 1) * 260);
   }
 
   function aggroChanceFor(level) {
@@ -116,6 +112,9 @@
       this.spawnCount = 0;
       this.rushUntil = 0;
       this.raf = null;
+      this.dodgesSinceLevel = 0;
+      this.dodgesPerLevel = 6;
+      this.maxSlots = 14;
       this.buildRow();
     }
 
@@ -173,6 +172,7 @@
       this.score = 0;
       this.level = 1;
       this.elapsed = 0;
+      this.dodgesSinceLevel = 0;
       this.playerIndex = Math.floor(this.slotCount / 2);
       hudBest.textContent = String(getBest());
 
@@ -200,15 +200,13 @@
       this.lastTs = now;
       this.elapsed += dt;
       this.score += dt;
-      const newLevel = 1 + Math.floor(this.elapsed / 15);
-      if (newLevel !== this.level) this.level = newLevel;
       this.updateHud();
       this.raf = requestAnimationFrame(() => this.tick());
     }
 
     scheduleSpawn(overrideMs) {
       if (!this.running) return;
-      const base = spawnIntervalFor(this.elapsed);
+      const base = spawnIntervalFor(this.level);
       const rushed = performance.now() < this.rushUntil ? base * 0.45 : base;
       const jitter = rushed * (0.8 + Math.random() * 0.4);
       const delay = overrideMs != null ? overrideMs : jitter;
@@ -357,12 +355,41 @@
 
         if (this.isAdjacentToPlayer(targetIndex)) {
           this.gameOver();
+        } else {
+          this.registerDodge();
         }
       }, walkMs + 40);
     }
 
     isAdjacentToPlayer(index) {
       return Math.abs(index - this.playerIndex) === 1;
+    }
+
+    registerDodge() {
+      this.dodgesSinceLevel++;
+      if (this.dodgesSinceLevel >= this.dodgesPerLevel) {
+        this.dodgesSinceLevel = 0;
+        this.levelUp();
+      }
+    }
+
+    levelUp() {
+      this.level++;
+      this.updateHud();
+      if (this.slotCount < this.maxSlots) this.addUrinal();
+      this.showBanner(`⬆️ Poziom ${this.level}! Łazienka się rozrasta.`);
+    }
+
+    addUrinal() {
+      const slot = document.createElement("div");
+      slot.className = "slot slot-new";
+      slot.dataset.index = String(this.slotCount);
+      const urinal = document.createElement("div");
+      urinal.className = "urinal";
+      slot.appendChild(urinal);
+      rowEl.appendChild(slot);
+      this.slots.push({ el: slot, occupant: null, blocked: null });
+      this.slotCount++;
     }
 
     movePlayer(dir) {
