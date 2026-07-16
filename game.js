@@ -17,7 +17,7 @@
     "Następnym razem wybierz większą łazienkę.",
     "Plotki już się rozchodzą…",
     "On patrzył. Wszyscy patrzyli.",
-    "Bukowski by tego nie zrobił.",
+    "Bukovski by tego nie zrobił.",
   ];
 
   const EVENTS = {
@@ -220,7 +220,7 @@
       this.elapsed = 0;
       this.dodgesSinceLevel = 0;
       this.playerIndex = Math.floor(this.slotCount / 2);
-      this.nick = (nickInput.value || "").trim().slice(0, 16) || "Bukowski";
+      this.nick = (nickInput.value || "").trim().slice(0, 16) || "Bukovski";
       nickInput.value = this.nick;
       setNick(this.nick);
       hudBest.textContent = String(getBest());
