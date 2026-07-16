@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>Nie Gap Się, Bo Dostaniesz Kompleksów™</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚻</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Monoton&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <div class="hud-item">⭐ <span id="hud-score">0</span></div>
+    <div class="hud-item">🏆 <span id="hud-best">0</span></div>
+    <div class="hud-item">📈 Poziom <span id="hud-level">1</span></div>
+    <button id="mute-btn" title="Wycisz dźwięk">🔊</button>
+  </div>
+
+  <div id="scene">
+    <div id="door">🚪<span id="door-label">WEJŚCIE</span></div>
+    <div id="row"></div>
+  </div>
+
+  <div id="mobile-controls">
+    <button id="btn-left" class="ctrl-btn">◀</button>
+    <button id="btn-right" class="ctrl-btn">▶</button>
+  </div>
+
+  <div id="title-screen" class="overlay">
+    <div class="panel">
+      <h1>Nie Gap Się,<br/>Bo Dostaniesz Kompleksów<span class="tm">™</span></h1>
+      <p class="tagline">„(nie sikam przy kolegach, żeby nie mieli kompleksów)”</p>
+      <p class="desc">Broń swojej przestrzeni osobistej. Uciekaj przed kolesiami, którzy wchodzą do łazienki i próbują stanąć obok Ciebie. Jak staną — koniec gry.</p>
+      <div class="controls-hint">
+        <div><kbd>◀</kbd> <kbd>▶</kbd> — przeskakuj między pisuarami</div>
+      </div>
+      <button id="start-btn" class="big-btn">Zacznij grę</button>
+    </div>
+  </div>
+
+  <div id="gameover-screen" class="overlay hidden">
+    <div class="panel">
+      <h1 class="go-title">GAME OVER</h1>
+      <p class="go-kompleks">Kolega dostał kompleksów.</p>
+      <p id="go-message" class="go-message">Za blisko!</p>
+      <p class="go-score">Wynik: <span id="go-score">0</span> punktów</p>
+      <p id="go-best" class="go-best hidden">🏆 Nowy rekord!</p>
+      <button id="retry-btn" class="big-btn">Zagraj ponownie</button>
+    </div>
+  </div>
+
+  <div id="event-banner" class="hidden"></div>
+
+</div>
+<script src="game.js"></script>
+</body>
+</html>
