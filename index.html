@@ -34,11 +34,16 @@
     <div class="panel">
       <h1>Nie Gap Się,<br/>Bo Dostaniesz Kompleksów<span class="tm">™</span></h1>
       <p class="tagline">„(nie sikam przy kolegach, żeby nie mieli kompleksów)”</p>
-      <p class="desc">Broń swojej przestrzeni osobistej. Uciekaj przed kolesiami, którzy wchodzą do łazienki i próbują stanąć obok Ciebie. Jak staną — koniec gry.</p>
+      <p class="desc">Jesteś Bukowskim. Natura obeszła się z Tobą wyjątkowo hojnie i, szczerze mówiąc, trochę się tego wstydzisz — nie chcesz, żeby koledzy w łazience zobaczyli i dostali kompleksów na resztę życia. Dlatego Twoja żelazna zasada: nikt nie staje obok. Uciekaj między pisuarami, trzymaj dystans, a jak ktoś jednak stanie tuż obok — plotka rozejdzie się po całym biurze i to koniec gry.</p>
+      <div class="nick-row">
+        <label for="nick-input">Ksywa:</label>
+        <input id="nick-input" type="text" maxlength="16" placeholder="Bukowski" autocomplete="off" />
+      </div>
       <div class="controls-hint">
         <div><kbd>◀</kbd> <kbd>▶</kbd> — przeskakuj między pisuarami</div>
       </div>
       <button id="start-btn" class="big-btn">Zacznij grę</button>
+      <div id="title-leaderboard" class="leaderboard"></div>
     </div>
   </div>
 
@@ -50,6 +55,7 @@
       <p class="go-score">Wynik: <span id="go-score">0</span> punktów</p>
       <p id="go-best" class="go-best hidden">🏆 Nowy rekord!</p>
       <button id="retry-btn" class="big-btn">Zagraj ponownie</button>
+      <div id="go-leaderboard" class="leaderboard"></div>
     </div>
   </div>
 

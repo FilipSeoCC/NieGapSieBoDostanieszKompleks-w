@@ -40,6 +40,9 @@
   const goBest = $("#go-best");
   const eventBanner = $("#event-banner");
   const muteBtn = $("#mute-btn");
+  const nickInput = $("#nick-input");
+  const titleLeaderboard = $("#title-leaderboard");
+  const goLeaderboard = $("#go-leaderboard");
 
   let audioCtx = null;
   let muted = false;
@@ -89,6 +92,49 @@
   const BEST_KEY = "ngsbdk_best_score";
   const getBest = () => Number(localStorage.getItem(BEST_KEY) || 0);
   const setBest = (v) => localStorage.setItem(BEST_KEY, String(v));
+
+  const NICK_KEY = "ngsbdk_nick";
+  const getNick = () => localStorage.getItem(NICK_KEY) || "";
+  const setNick = (v) => localStorage.setItem(NICK_KEY, v);
+
+  const LEADERBOARD_KEY = "ngsbdk_leaderboard";
+  const LEADERBOARD_SIZE = 5;
+  function getLeaderboard() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function addToLeaderboard(nick, score) {
+    const list = getLeaderboard();
+    list.push({ nick, score });
+    list.sort((a, b) => b.score - a.score);
+    const trimmed = list.slice(0, LEADERBOARD_SIZE);
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
+    return trimmed;
+  }
+  function renderLeaderboard(el, { highlightScore = null, highlightNick = null } = {}) {
+    if (!el) return;
+    const list = getLeaderboard();
+    if (!list.length) {
+      el.innerHTML = "";
+      return;
+    }
+    let usedHighlight = false;
+    const rows = list.map((entry, i) => {
+      const isHot = !usedHighlight && highlightScore != null && entry.score === highlightScore && entry.nick === highlightNick;
+      if (isHot) usedHighlight = true;
+      return `<li class="${isHot ? "hot" : ""}"><span class="rank">${i + 1}.</span><span class="lb-nick">${escapeHtml(entry.nick)}</span><span class="lb-score">${entry.score}</span></li>`;
+    }).join("");
+    el.innerHTML = `<div class="lb-title">🏅 Top ${LEADERBOARD_SIZE}</div><ol>${rows}</ol>`;
+  }
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
 
   function spawnIntervalFor(level) {
     return Math.max(600, 3000 - (level - 1) * 260);
@@ -174,6 +220,9 @@
       this.elapsed = 0;
       this.dodgesSinceLevel = 0;
       this.playerIndex = Math.floor(this.slotCount / 2);
+      this.nick = (nickInput.value || "").trim().slice(0, 16) || "Bukowski";
+      nickInput.value = this.nick;
+      setNick(this.nick);
       hudBest.textContent = String(getBest());
 
       const playerAvatar = this.makeAvatar({ isPlayer: true });
@@ -449,6 +498,9 @@
       goBest.classList.toggle("hidden", !isNewBest);
       hudBest.textContent = String(getBest());
 
+      addToLeaderboard(this.nick, finalScore);
+      renderLeaderboard(goLeaderboard, { highlightScore: finalScore, highlightNick: this.nick });
+
       setTimeout(() => gameoverScreen.classList.remove("hidden"), 350);
     }
   }
@@ -474,4 +526,6 @@
   $("#btn-right").addEventListener("click", () => game && game.movePlayer(1));
 
   hudBest.textContent = String(getBest());
+  nickInput.value = getNick();
+  renderLeaderboard(titleLeaderboard);
 })();
